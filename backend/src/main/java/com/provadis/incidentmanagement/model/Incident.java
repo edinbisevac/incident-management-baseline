@@ -1,4 +1,4 @@
-package com.provadis.model;
+package com.provadis.incidentmanagement.model;
 
 
 import jakarta.persistence.*;
@@ -19,4 +19,6 @@ public class Incident {
     private String status;
 
     private String priority;
+
+    private String source;
 }
