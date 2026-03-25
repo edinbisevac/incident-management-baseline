@@ -213,12 +213,12 @@ export default function App() {
           <input
             value={newAlarm.source}
             onChange={(e) => setNewAlarm((s) => ({ ...s, source: e.target.value }))}
-            placeholder="source"
+            placeholder="Quelle"
           />
           <input
             value={newAlarm.message}
             onChange={(e) => setNewAlarm((s) => ({ ...s, message: e.target.value }))}
-            placeholder="message"
+            placeholder="Nachricht"
           />
           <select
             value={newAlarm.severity}
@@ -238,10 +238,10 @@ export default function App() {
           <thead>
             <tr style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
               <th>ID</th>
-              <th>Source</th>
-              <th>Severity</th>
-              <th>Message</th>
-              <th>Created</th>
+              <th>Quelle</th>
+              <th>Schweregrad</th>
+              <th>Nachricht</th>
+              <th>Erfassungszeit</th>
               <th></th>
             </tr>
           </thead>
@@ -275,12 +275,12 @@ export default function App() {
           <input
             value={newIncident.title}
             onChange={(e) => setNewIncident((s) => ({ ...s, title: e.target.value }))}
-            placeholder="title"
+            placeholder="Quelle"
           />
           <input
             value={newIncident.description}
             onChange={(e) => setNewIncident((s) => ({ ...s, description: e.target.value }))}
-            placeholder="description"
+            placeholder="Beschreibung"
           />
           <select
             value={newIncident.status}
@@ -310,10 +310,10 @@ export default function App() {
           <thead>
             <tr style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
               <th>ID</th>
-              <th>Title</th>
+              <th>Quelle</th>
               <th>Status</th>
-              <th>Priority</th>
-              <th>Description</th>
+              <th>Priorität</th>
+              <th>Beschreibung</th>
               <th></th>
             </tr>
           </thead>
