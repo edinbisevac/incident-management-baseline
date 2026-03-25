@@ -23,34 +23,26 @@ public class AlarmController {
 
     @PostMapping
     public Incident receiveAlarm(@RequestBody Alarm alarm) {
-        // 1) Alarm vervollständigen + speichern
         if (alarm.getCreatedAt() == null) {
             alarm.setCreatedAt(Instant.now());
         }
+
         Alarm savedAlarm = alarmRepository.save(alarm);
 
-        // 2) Korrelation (MVP):
-        // Wenn es bereits einen OPEN-Incident für dieselbe Source gibt ->
-        // aktualisieren,
-        // sonst neuen Incident anlegen.
         Incident incident = incidentRepository
                 .findFirstBySourceAndStatus(savedAlarm.getSource(), "OPEN")
                 .orElseGet(Incident::new);
 
-        // Falls neu:
+        String mappedPriority = mapSeverityToPriority(savedAlarm.getSeverity());
+
         if (incident.getId() == null) {
             incident.setSource(savedAlarm.getSource());
             incident.setTitle("Alarm von " + savedAlarm.getSource());
             incident.setStatus("OPEN");
-            incident.setPriority("MEDIUM");
         }
 
-        // Immer aktualisieren:
         incident.setDescription(savedAlarm.getMessage());
-
-        // Priority ggf. erhöhen (HIGH > MEDIUM > LOW)
-        String mappedPriority = mapSeverityToPriority(savedAlarm.getSeverity());
-        incident.setPriority(maxPriority(incident.getPriority(), mappedPriority));
+        incident.setPriority(mappedPriority);
 
         return incidentRepository.save(incident);
     }
