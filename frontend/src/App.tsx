@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import provadisLogo from "./assets/provadis_logo.png";
 
 type Incident = {
   id: number;
@@ -175,13 +176,34 @@ export default function App() {
           padding: 24,
         }}
       >
-        <h1 style={{ marginTop: 0 }}>Incident Management MVP</h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 16,
+            marginBottom: 16,
+          }}
+        >
+          <div>
+            <h1 style={{ marginTop: 0, marginBottom: 12 }}>Incident Management MVP</h1>
 
-        <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 16 }}>
-          <button onClick={loadAll} disabled={loading}>
-            {loading ? "Lade..." : "Neu laden"}
-          </button>
-          {error && <div style={{ color: "crimson" }}>{error}</div>}
+            <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+              <button onClick={loadAll} disabled={loading}>
+                {loading ? "Lade..." : "Neu laden"}
+              </button>
+              {error && <div style={{ color: "crimson" }}>{error}</div>}
+            </div>
+          </div>
+
+          <img
+            src={provadisLogo}
+            alt="Provadis Hochschule Logo"
+            style={{
+              height: 80,
+              objectFit: "contain",
+            }}
+          />
         </div>
 
         <hr style={{ margin: "16px 0" }} />
