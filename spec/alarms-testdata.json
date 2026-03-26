@@ -1,0 +1,52 @@
+[
+  {
+    "source": "router-12",
+    "message": "Link down",
+    "severity": "CRITICAL"
+  },
+  {
+    "source": "router-12",
+    "message": "Packet loss detected",
+    "severity": "MAJOR"
+  },
+  {
+    "source": "router-12",
+    "message": "Interface unstable",
+    "severity": "MINOR"
+  },
+  {
+    "source": "router-7",
+    "message": "BGP session dropped",
+    "severity": "CRITICAL"
+  },
+  {
+    "source": "router-3",
+    "message": "High CPU usage",
+    "severity": "MAJOR"
+  },
+  {
+    "source": "router-3",
+    "message": "Temperature warning",
+    "severity": "MINOR"
+  },
+  {
+    "source": "router-21",
+    "message": "Power supply failure",
+    "severity": "CRITICAL"
+  },
+  {
+    "source": "router-8",
+    "message": "Latency threshold exceeded",
+    "severity": "MAJOR"
+  },
+  {
+    "source": "router-8",
+    "message": "Jitter threshold exceeded",
+    "severity": "MINOR"
+  },
+  {
+    "source": "router-15",
+    "message": "Fan malfunction",
+    "severity": "MINOR"
+  }
+]

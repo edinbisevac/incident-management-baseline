@@ -28,6 +28,8 @@ export default function App() {
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedSource, setSelectedSource] = useState<string | null>(null);
+  const [selectedSourceAlarms, setSelectedSourceAlarms] = useState<Alarm[]>([]);
 
   const [newIncident, setNewIncident] = useState({
     title: "",
@@ -37,7 +39,7 @@ export default function App() {
   });
 
   const [newAlarm, setNewAlarm] = useState({
-    source: "router-12",
+    source: "router-test",
     message: "Link down",
     severity: "CRITICAL",
   });
@@ -157,6 +159,22 @@ export default function App() {
     }
   }
 
+  async function openAlarmMessages(source: string) {
+    setError(null);
+    try {
+      const alarms = await api<Alarm[]>(`/api/alarms?source=${encodeURIComponent(source)}`);
+      setSelectedSource(source);
+      setSelectedSourceAlarms(alarms);
+    } catch (e: any) {
+      setError(e?.message ?? "Fehler beim Laden der Alarmnachrichten");
+    }
+  }
+
+  function closeAlarmMessages() {
+    setSelectedSource(null);
+    setSelectedSourceAlarms([]);
+  }
+
   return (
     <div
       style={{
@@ -237,7 +255,7 @@ export default function App() {
         <table width="100%" cellPadding={6} style={{ borderCollapse: "collapse", marginBottom: 24 }}>
           <thead>
             <tr style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
-              <th>ID</th>
+              <th>Alarm-ID</th>
               <th>Quelle</th>
               <th>Schweregrad</th>
               <th>Nachricht</th>
@@ -275,7 +293,7 @@ export default function App() {
           <input
             value={newIncident.title}
             onChange={(e) => setNewIncident((s) => ({ ...s, title: e.target.value }))}
-            placeholder="Quelle"
+            placeholder="Titel"
           />
           <input
             value={newIncident.description}
@@ -309,7 +327,7 @@ export default function App() {
         <table width="100%" cellPadding={6} style={{ borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
-              <th>ID</th>
+              <th>Incident-ID</th>
               <th>Quelle</th>
               <th>Status</th>
               <th>Priorität</th>
@@ -321,7 +339,7 @@ export default function App() {
             {incidents.map((i) => (
               <tr key={i.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
                 <td>{i.id}</td>
-                <td>{i.title}</td>
+                <td>{i.source ?? "-"}</td>
                 <td>
                   <select value={i.status} onChange={(e) => updateStatus(i.id, e.target.value)}>
                     {STATUS.map((v) => (
@@ -342,19 +360,88 @@ export default function App() {
                 </td>
                 <td>{i.description}</td>
                 <td>
+                  {i.source && (
+                    <button onClick={() => openAlarmMessages(i.source as string)}>
+                      Nachrichten
+                    </button>
+                  )}
+                </td>
+                <td>
                   <button onClick={() => deleteIncident(i.id)}>Löschen</button>
                 </td>
               </tr>
             ))}
             {incidents.length === 0 && (
               <tr>
-                <td colSpan={6} style={{ opacity: 0.7 }}>
+                <td colSpan={7} style={{ opacity: 0.7 }}>
                   Keine Incidents
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+
+        {selectedSource && (
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.35)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+            }}
+            onClick={closeAlarmMessages}
+          >
+            <div
+              style={{
+                backgroundColor: "white",
+                borderRadius: 12,
+                padding: 20,
+                width: "90%",
+                maxWidth: 700,
+                maxHeight: "70vh",
+                overflowY: "auto",
+                boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 style={{ marginTop: 0 }}>
+                Alarmnachrichten für {selectedSource}
+              </h3>
+
+              {selectedSourceAlarms.length === 0 ? (
+                <p>Keine Nachrichten vorhanden.</p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {selectedSourceAlarms.map((alarm) => (
+                    <div
+                      key={alarm.id}
+                      style={{
+                        border: "1px solid #ddd",
+                        borderRadius: 8,
+                        padding: 12,
+                        backgroundColor: "#f9fafb",
+                      }}
+                    >
+                      <div><strong>Schweregrad:</strong> {alarm.severity}</div>
+                      <div><strong>Nachricht:</strong> {alarm.message}</div>
+                      <div>
+                        <strong>Erfassungszeit:</strong>{" "}
+                        {new Date(alarm.createdAt).toLocaleString()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{ marginTop: 16 }}>
+                <button onClick={closeAlarmMessages}>Schließen</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -39,16 +39,22 @@ public class AlarmController {
             incident.setSource(savedAlarm.getSource());
             incident.setTitle("Alarm von " + savedAlarm.getSource());
             incident.setStatus("OPEN");
+            incident.setPriority(mappedPriority);
+        } else {
+            incident.setPriority(maxPriority(incident.getPriority(), mappedPriority));
         }
 
+        // Letzte Nachricht weiterhin direkt im Incident sichtbar
         incident.setDescription(savedAlarm.getMessage());
-        incident.setPriority(mappedPriority);
 
         return incidentRepository.save(incident);
     }
 
     @GetMapping
-    public List<Alarm> getAllAlarms() {
+    public List<Alarm> getAlarms(@RequestParam(required = false) String source) {
+        if (source != null && !source.isBlank()) {
+            return alarmRepository.findBySourceOrderByCreatedAtDesc(source);
+        }
         return alarmRepository.findAll();
     }
 
@@ -66,8 +72,9 @@ public class AlarmController {
     }
 
     private String mapSeverityToPriority(String severity) {
-        if (severity == null)
+        if (severity == null) {
             return "MEDIUM";
+        }
         return switch (severity.toUpperCase()) {
             case "CRITICAL" -> "HIGH";
             case "MAJOR" -> "MEDIUM";
@@ -76,20 +83,20 @@ public class AlarmController {
         };
     }
 
-    private String maxPriority(String a, String b) {
-        int pa = priorityValue(a);
-        int pb = priorityValue(b);
-        return (pb > pa) ? b : a;
+    private String maxPriority(String current, String incoming) {
+        int currentValue = priorityValue(current);
+        int incomingValue = priorityValue(incoming);
+        return incomingValue > currentValue ? incoming : current;
     }
 
-    private int priorityValue(String p) {
-        if (p == null)
-            return 2;
-        return switch (p.toUpperCase()) {
+    private int priorityValue(String priority) {
+        if (priority == null) return 0;
+
+        return switch (priority.toUpperCase()) {
             case "HIGH" -> 3;
             case "MEDIUM" -> 2;
             case "LOW" -> 1;
-            default -> 2;
+            default -> 0;
         };
     }
 }

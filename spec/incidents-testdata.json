@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Router Down Frankfurt",
+    "description": "Core router in Frankfurt is unreachable",
+    "status": "OPEN",
+    "priority": "HIGH"
+  },
+  {
+    "title": "Packet Loss in Region West",
+    "description": "Intermittent packet loss reported",
+    "status": "OPEN",
+    "priority": "MEDIUM"
+  },
+  {
+    "title": "Temperature Warning",
+    "description": "Temperature threshold exceeded in rack 4",
+    "status": "IN_PROGRESS",
+    "priority": "LOW"
+  },
+  {
+    "title": "BGP Instability",
+    "description": "Multiple BGP flaps detected",
+    "status": "OPEN",
+    "priority": "HIGH"
+  },
+  {
+    "title": "CPU Load Increased",
+    "description": "Router CPU over 85 percent",
+    "status": "RESOLVED",
+    "priority": "MEDIUM"
+  },
+  {
+    "title": "Power Supply Issue",
+    "description": "Secondary PSU failed",
+    "status": "OPEN",
+    "priority": "HIGH"
+  }
+]
