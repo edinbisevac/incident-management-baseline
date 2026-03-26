@@ -339,7 +339,7 @@ export default function App() {
             {incidents.map((i) => (
               <tr key={i.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
                 <td>{i.id}</td>
-                <td>{i.source ?? "-"}</td>
+                <td>{i.source ?? i.title}</td>
                 <td>
                   <select value={i.status} onChange={(e) => updateStatus(i.id, e.target.value)}>
                     {STATUS.map((v) => (
